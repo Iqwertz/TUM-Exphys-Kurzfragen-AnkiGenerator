@@ -3,10 +3,12 @@ import json
 import random
 import os
 from src import dataStructure as ds
+from src import settings
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
 os.chdir(dname)
+
 
 #create clean index.json by search and replace ,\s*\n*\s*\] with \n]
 """ f = open("assets/index.json", "r")
@@ -18,7 +20,7 @@ f.write(index)
 f.close() """
 
 #read index.json and create anki deck
-f = open("assets/index.json", "r")
+f = open(settings.sourceFolder + "index.json", "r")
 data = f.read()
 f.close()
 

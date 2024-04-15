@@ -1,12 +1,13 @@
 import cv2
 import os
+from src import settings
 
 compression = True
 compressionScale = 40
 
 forceCompleteness = True #This forces that to every chapter a losung and question image is generated, if no image was found the whole page is saved
 
-ouputPath = "assets/output/"
+ouputPath = settings.sourceFolder + "output/"
 def screenshot(chapter, image):
     if(chapter == None):
         print("\033[93m Chapter is None \033[0m")

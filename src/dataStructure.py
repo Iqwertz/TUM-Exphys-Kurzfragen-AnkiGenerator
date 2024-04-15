@@ -1,4 +1,5 @@
 import random
+from src import settings
 
 class MainChapter:
     def __init__(self, number):
@@ -78,8 +79,8 @@ class BoundingBoxChapter:
         
     def getChapterClass(self):
         chapter = Chapter(self.number)
-        chapter.setLosungUrl("assets/output/losung" + str(self.number) + ".png")
-        chapter.setQuestionUrl("assets/output/question" + str(self.number) + ".png")
+        chapter.setLosungUrl(settings.sourceFolder + "output/losung" + str(self.number) + ".png")
+        chapter.setQuestionUrl(settings.sourceFolder + "output/question" + str(self.number) + ".png")
         return chapter
         
     def printRecursive(self):

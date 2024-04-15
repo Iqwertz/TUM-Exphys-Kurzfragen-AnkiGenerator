@@ -7,9 +7,10 @@ from src import textFilter as tf
 from src import dataStructure as ds
 from src import screenshot as ss
 import os, shutil
+from src import settings
 
 #settings
-imagePath = "assets/images/"
+imagePath = settings.sourceFolder + "images/"
 images = 67
 ignoreImages = [1, 2, 3, 4, 5, 6, 7]
 
@@ -22,7 +23,7 @@ currentMainChapter = None
 currentChapter = None
 
 #empty images from output folder
-folder = 'assets/output'
+folder = settings.sourceFolder + "output/"
 for filename in os.listdir(folder):
     file_path = os.path.join(folder, filename)
     try:
@@ -127,11 +128,11 @@ if(currentChapter != None):
 coordChapters.append(currentMainChapter)
 
 #delete old index.json if exists
-if os.path.exists("assets/index.json"):
-  os.remove("assets/index.json")
+if os.path.exists(settings.sourceFolder + "/index.json"):
+  os.remove(settings.sourceFolder + "/index.json")
 
 #write index.json
-f = open("assets/index.json", "w")
+f = open(settings.sourceFolder + "/index.json", "w")
 f.write("{\n")
 f.write("  \"chapters\": [\n")
 for mainChapter in coordChapters:
