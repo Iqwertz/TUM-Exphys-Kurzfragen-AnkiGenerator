@@ -4,6 +4,7 @@ import random
 import os
 from src import dataStructure as ds
 from src import settings
+import hashlib
 
 abspath = os.path.abspath(__file__)
 dname = os.path.dirname(abspath)
@@ -46,9 +47,9 @@ print("loaded index.json")
 for mainChapter in chapters:
     mainChapter.printRecursive()
     
-exphys3Model = genanki.Model(
-    2059400111,
-    'TUM Exphys3 Kurzfragen',
+exphysModel = genanki.Model(
+    int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16),
+    'TUM ' + settings.projectName + ' Kurzfragen',
     fields=[
       {'name': 'Frage'},
       {'name': 'Antwort'},
@@ -56,16 +57,16 @@ exphys3Model = genanki.Model(
 
     templates=[
       {
-        'name': 'Exphys3 StandardCard',
+        'name': settings.projectName + ' StandardCard',
         'qfmt': '{{Frage}}',
         'afmt': '{{FrontSide}}<hr id="answer">{{Antwort}}',
       },
     ],
   )
 
-exphys3ModelSorted = genanki.Model(
-    2059400121,
-    'TUM Exphys3 Kurzfragen sortiert',
+exphysModelSorted = genanki.Model(
+       int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16) + 1,
+    'TUM ' + settings.projectName + ' Kurzfragen sortiert',
     fields=[
       {'name': 'Frage'},
       {'name': 'Antwort'},
@@ -73,7 +74,7 @@ exphys3ModelSorted = genanki.Model(
 
     templates=[
       {
-        'name': 'Exphys3 StandardCard Sorted',
+        'name': settings.projectName + ' StandardCard Sorted',
         'qfmt': '{{Frage}}',
         'afmt': '{{FrontSide}}<hr id="answer">{{Antwort}}',
       },
@@ -85,21 +86,23 @@ exphys3ModelSorted = genanki.Model(
 print("generating sorted anki deck")
 decks = []
 mediaFiles = []
+counter = 0
 
 for mainChapter in chapters:
     newDeck = genanki.Deck(
-      random.randint(0, 100000),
-      "TUM Exphys3 Kurzfragen (sortiert)::" + str(mainChapter.number) + ": " + mainChapter.title
+      int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16) + 5,
+      "TUM " +settings.projectName + " Kurzfragen (sortiert)::" + str(mainChapter.number) + ": " + mainChapter.title
     )
     for chapter in mainChapter.getChapters():
+        counter += 1
         mediaFiles.append(chapter.getLosungUrl())
         mediaFiles.append(chapter.getQuestionUrl())      
         questionFileName = chapter.getQuestionUrl().split("/")[-1]
         answerFileName = chapter.getLosungUrl().split("/")[-1] 
-        formatedQuestion = "<img src=\"" + questionFileName + "\">"
-        formatedAnswer = "<img src=\"" + answerFileName + "\">"
+        formatedQuestion = "<img id=\""+settings.projectName+"sorted\" src=\"" + questionFileName + "\">"
+        formatedAnswer = "<img id=\""+settings.projectName+"sorted\" src=\"" + answerFileName + "\">"
         newDeck.add_note(genanki.Note(
-          model=exphys3ModelSorted,
+          model=exphysModelSorted,
           fields=[formatedQuestion, formatedAnswer],
         ))
     decks.append(newDeck)
@@ -107,16 +110,17 @@ for mainChapter in chapters:
 
 packageChapter = genanki.Package(decks)
 packageChapter.media_files = mediaFiles
-packageChapter.write_to_file('TUMExphys3Kurzfragen_Sortiert.apkg')
+packageChapter.write_to_file('TUM'+settings.projectName+'Kurzfragen_Sortiert.apkg')
 
+print(str(counter) + " cards added")
 print("successfully generated sorted anki deck")
 
 #generate unsorterd anki deck
 print("generating unsorted anki deck")
 newDeck = None
 newDeck = genanki.Deck(
-      random.randint(0, 100000),
-      "TUM Exphys3 Kurzfragen"
+      int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16) + 12,
+      "TUM "+settings.projectName+" Kurzfragen"
 )
 mediaFiles = []
 for mainChapter in chapters:
@@ -125,16 +129,16 @@ for mainChapter in chapters:
         mediaFiles.append(chapter.getQuestionUrl())      
         questionFileName = chapter.getQuestionUrl().split("/")[-1]
         answerFileName = chapter.getLosungUrl().split("/")[-1]
-        formatedQuestion = "<img src=\"" + questionFileName + "\">"  #Added " " to make the questions of the unsorted deck have a diffrent hash than the sorted deck
-        formatedAnswer = "<img src=\"" + answerFileName + "\"> "      # -> this way the sorted and unsorted deck can be used at the same time
+        formatedQuestion = "<img id=\""+settings.projectName+"\"  src=\"" + questionFileName + "\">"  #Added " " to make the questions of the unsorted deck have a diffrent hash than the sorted deck
+        formatedAnswer = "<img id=\""+settings.projectName+"\"  src=\"" + answerFileName + "\"> "      # -> this way the sorted and unsorted deck can be used at the same time
         newDeck.add_note(genanki.Note(
-          model=exphys3Model,
+          model=exphysModel,
           fields=[formatedQuestion, formatedAnswer],
         ))
 
 
 packageChapterUnsorted = genanki.Package(newDeck)
 packageChapterUnsorted.media_files = mediaFiles
-packageChapterUnsorted.write_to_file('TUMExphys3Kurzfragen.apkg')
+packageChapterUnsorted.write_to_file('TUM'+settings.projectName+'Kurzfragen.apkg')
 
 print("successfully generated unsorted anki deck")

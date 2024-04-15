@@ -11,8 +11,8 @@ from src import settings
 
 #settings
 imagePath = settings.sourceFolder + "images/"
-images = 67
-ignoreImages = [1, 2, 3, 4, 5, 6, 7]
+images = settings.numberOfImages
+ignoreImages = settings.ignoreImages
 
 debugMode = False
 
@@ -32,7 +32,7 @@ for filename in os.listdir(folder):
     except Exception as e:
         print(e)
         
-for i in range(1, images):
+for i in range(0, images):
     if i in ignoreImages:
         continue
     print("Image: " + str(i))

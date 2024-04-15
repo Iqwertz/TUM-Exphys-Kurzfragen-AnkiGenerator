@@ -15,6 +15,10 @@ def filterOcrTexts(text, conf, left, top, width, height):
     
     #check if first character is a number
     if text[0].isdigit():
+        #Remove dot if it is the last character //Exphys4 11.14.
+        if(text[-1] == "."):
+            text = text[:-1]
+        
         if(len(text) > 5):
             return False
         #check if text contains special characters except for dots
@@ -22,9 +26,11 @@ def filterOcrTexts(text, conf, left, top, width, height):
             return False
         
         if(left > x_max):
+            print(text + "is to far left")
             return False
         
         if(height < min_height):
+            print( text + "is to small")
             return False
         return True
     
@@ -42,6 +48,8 @@ def classifyText(text):
     
     #MainChapter if no dot or if a dot exits but no number after the dot
     if (text.count(".") == 0 and any(char.isdigit() for char in text)) or (text.count(".") == 1 and not text.split(".")[1].isdigit()):
+        if(text == "1So"):  #Special case for Exphys4
+            return "Losung" 
         print(text)
         return "MainChapter"
     
