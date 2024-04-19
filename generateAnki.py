@@ -90,7 +90,7 @@ counter = 0
 
 for mainChapter in chapters:
     newDeck = genanki.Deck(
-      int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16) + 5,
+      random.randint(0, 100000),
       "TUM " +settings.projectName + " Kurzfragen (sortiert)::" + str(mainChapter.number) + ": " + mainChapter.title
     )
     for chapter in mainChapter.getChapters():
@@ -119,7 +119,7 @@ print("successfully generated sorted anki deck")
 print("generating unsorted anki deck")
 newDeck = None
 newDeck = genanki.Deck(
-      int(hashlib.sha256(settings.projectName.encode("utf-8")).hexdigest()[:7], base=16) + 12,
+      random.randint(0, 100000),
       "TUM "+settings.projectName+" Kurzfragen"
 )
 mediaFiles = []
